@@ -5,8 +5,11 @@
  Taking the opponent's piece is not yet implemented.
 
 ## Screenshots
-![initial setup](public\screenshots\initial-setup.jpg)
-![second turn](public\screenshots\second-turn.jpg)
+![initial setup](./public/screenshots/initial-setup.jpg)
+![second turn](./public/screenshots/second-turn.jpg)
+
+## Demo
+[Checkers demo](https://vladmidir.github.io/checkers-react/)
 
 ## Structure
 - The App consists of Game, Board, Squares, and Pieces.

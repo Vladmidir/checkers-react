@@ -7,8 +7,7 @@ export default function Game(){
     function makeMove(){
       setRedToMove(!redToMove)
     }
-  
-  
+    
     return( 
     <>
       <h2>{(redToMove ? 'red' : 'blue') + ' to move'}</h2>

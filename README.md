@@ -8,6 +8,9 @@
 ![initial setup](./public/screenshots/initial-setup.jpg)
 ![second turn](./public/screenshots/second-turn.jpg)
 
+## Demo
+[Checkers demo](https://vladmidir.github.io/checkers-react/)
+
 ## Structure
 - The App consists of Game, Board, Squares, and Pieces.
 - Game keeps track of whose turn it is, passing props to Board.
