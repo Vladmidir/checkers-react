@@ -4,6 +4,10 @@
  This project is currently in development. Right now it allows the user to move pieces. 
  Taking the opponent's piece is not yet implemented.
 
+## Screenshots
+![initial setup](public\screenshots\initial-setup.jpg)
+![second turn](public\screenshots\second-turn.jpg)
+
 ## Structure
 - The App consists of Game, Board, Squares, and Pieces.
 - Game keeps track of whose turn it is, passing props to Board.
