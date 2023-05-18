@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Square from "./Square";
-import {removeHighlights, mutateTaking, showMovesBlue, showMovesRed, copyBoard, updateCoordinates} from "./utils";
+import {removeHighlights, mutateTaking, getMovesBlue, getMovesRed, copyBoard, updateCoordinates, searchForced, nestedToStr} from "./utils";
 export default function Board({redToMove, moveMade}) {
     //model of the checkers board.
     //used to update the elements.
@@ -28,8 +28,17 @@ export default function Board({redToMove, moveMade}) {
       let selected = board[row][col]
 
       if (selected === '0' && redToMove){
-        //calculate possible moves for red
-        let possibleMoves = showMovesRed(board, row, col)
+        //calculate possible moves for red piece selected
+        let possibleMoves = getMovesRed(board, row, col)
+        //calculate all forced moves for red
+        const forcedMoves = nestedToStr(searchForced(board, "red"))
+        //If there are forced moves on the board AND the selected piece has possible moves, then
+        //make sure the possible moves are among the forced.
+        console.log(possibleMoves)
+        if (forcedMoves.length > 0 && possibleMoves.length > 0){
+            possibleMoves = possibleMoves.filter(move => forcedMoves.includes(move.toString()))
+        }
+        console.log(possibleMoves)
         // Record the selectedPiece and return possible moves
         setShowingMoves(true)
         setSelectedPiece([row, col])
@@ -37,8 +46,16 @@ export default function Board({redToMove, moveMade}) {
       }
       
       else if (selected === '1' && !redToMove){
-        //calculate possible moves for blue
-        let possibleMoves = showMovesBlue(board, row, col)
+        //calculate possible moves for blue piece selected
+        let possibleMoves = getMovesBlue(board, row, col)
+        //calculate all forced moves for blue
+        const forcedMoves = nestedToStr(searchForced(board, "blue")) //maybe represented it in str format in utils.js to shorten code.
+        //If there are forced moves on the board AND the selected piece has possible move, then
+        //make sure the possible moves are among the forced.
+        if (forcedMoves.length > 0 && possibleMoves.length > 0){
+            possibleMoves = possibleMoves.filter(move => forcedMoves.includes(move.toString()))
+        }
+
         // Record the selectedPiece and return possible moves
         setSelectedPiece([row, col])
         setShowingMoves(true)

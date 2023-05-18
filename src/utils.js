@@ -67,74 +67,161 @@ const updateCoordinates = (board, coordionates, char) => {
     return board
   }
 
+
 /**
- * Look for forced moves for player `color` on the board
+ * Return all forced moves for the Red piece at (`row`, `col`)
  * @param {[[int]]} board 
- * @param {str} color
+ * @param {int} row 
+ * @param {int} col 
+ * @returns [[int]] 
  */
-function searchForced(board, color){
-
-}
-
-function showMovesRed(board, row, col) {
-    let selected = board[row][col]
-    let forced = false
+function getForcedRed(board, row, col) {
     let possibleMoves = []
     //check the left boundary
+    if (row + 2 <= 7 && col - 2 >=0 && board[row + 1][col - 1] === '1' &&  board[row + 2][col - 2] === ' '){
+      possibleMoves.push([row + 2, col - 2])
+    }
+    //check the right boundary
+    if (row + 2 <= 7 && col + 2 <= 7 && board[row + 1][col + 1] === '1' &&  board[row + 2][col + 2] === ' '){
+      possibleMoves.push([row + 2, col + 2])
+    }
+    return possibleMoves
+}
+
+/**
+ * Return all possible moves for the selected Red piece at (`row`, `col`)
+ * @param {[[int]]} board 
+ * @param {int} row 
+ * @param {int} col 
+ * @returns [[int]]
+ */
+function getMovesRed(board, row, col) {
+    //if we find forced moves, return early
+    let possibleMoves = getForcedRed(board, row, col)
+    if (possibleMoves.length > 0){
+        return possibleMoves
+    }
+    //check the left boundary
     if ((row + 1 <= 7) && (col - 1 >= 0)){
-      //take possibility (forced)
-      if (board[row + 1][col - 1] === '1' && row + 2 <= 7 && col - 2 >=0 && board[row + 2][col - 2] === ' '){
-        possibleMoves.push([row + 2, col - 2])
-        forced = true
-      }
       //possible empty square move
-      else if(board[row + 1][col - 1] === ' ' && !forced){
+      if(board[row + 1][col - 1] === ' '){
         possibleMoves.push([row + 1, col - 1])
       }
     }
     //check the right boundary
     if ((row + 1 <= 7) && (col + 1 <= 7)){
-      //take possibility (forced)
-      if (board[row + 1][col + 1] === '1' && row + 2 <= 7 && col + 2 <= 7 && board[row + 2][col + 2] === ' '){
-        possibleMoves.push([row + 2, col + 2])
-      }
       //possible empty square move
-      else if(board[row + 1][col + 1] === ' ' && !forced){
+      if(board[row + 1][col + 1] === ' '){
         possibleMoves.push([row + 1, col + 1])
-       
       }
     }
     return possibleMoves
 }
 
-function showMovesBlue(board, row, col) {
+/**
+ * Return all forced moves for the Blue piece at (`row`, `col`)
+ * @param {[[int]]} board 
+ * @param {int} row 
+ * @param {int} col 
+ * @returns [[int]] 
+ */
+function getForcedBlue(board, row, col) {
     let possibleMoves = []
-    let forced = false
+    //check left
+    if (row - 2 >= 0 && col - 2 >=0 && board[row - 1][col - 1] === '0' &&  board[row - 2][col - 2] === ' '){
+      possibleMoves.push([row - 2, col - 2])
+    }
+    //check right
+    if (row - 2 >= 0 && col + 2 <= 7 && board[row - 1][col + 1] === '0' && board[row - 2][col + 2] === ' '){
+        possibleMoves.push([row - 2, col + 2])
+    }
+    return possibleMoves
+}
+
+/**
+ * Return all possible moves for the selected Blue piece at (`row`, `col`)
+ * @param {[[int]]} board 
+ * @param {int} row 
+ * @param {int} col 
+ * @returns [[int]]
+ */
+function getMovesBlue(board, row, col) {
+
+    let possibleMoves = getForcedBlue(board, row, col)
+    //if forced moves exist, return early
+    if(possibleMoves.length > 0) {
+        return possibleMoves
+    }
     //check left boundary
     if ((row - 1 >= 0) && (col - 1 >= 0)){
-      
-      //take possibility (forced)
-      if (board[row - 1][col - 1] === '0' && row - 2 >= 0 && col - 2 >=0 && board[row - 2][col - 2] === ' '){
-        possibleMoves.push([row - 2, col - 2])
-        forced = true
-      }
       //possible empty square move
-      else if(board[row - 1][col - 1] === ' ' && !forced){
+
+      if(board[row - 1][col - 1] === ' '){
         possibleMoves.push([row - 1, col - 1])
       }
     }
     //check right boundary
     if ((row - 1 >= 0) && (col + 1 <= 7)){
-      if (board[row - 1][col + 1] === '0' && row - 2 >= 0 && col + 2 <= 7 && board[row - 2][col + 2] === ' '){
-        possibleMoves.push([row - 2, col + 2])
-        forced = true
-      }
       //possible empty square move
-      else if(board[row - 1][col + 1] === ' ' && !forced){
+      if(board[row - 1][col + 1] === ' '){
         possibleMoves.push([row - 1, col + 1])
       }
     } 
     return possibleMoves
 }
 
-export {mutateTaking, removeHighlights, searchForced, showMovesBlue, showMovesRed, copyBoard, updateCoordinates}
+
+/**
+ * Look for forced moves for player `color` on the board.
+ * Red is 0, Blue is 1.
+ * @param {[[int]]} board 
+ * @param {str} color
+ */
+function searchForced(board, color) {
+    let allForcedMoves = []
+
+    if(color.toLowerCase() === "red"){
+        for (let i = 0; i < 8; i++){
+            for (let j = 0; j < 8; j++ ){  
+                if (board[i][j] === '0'){
+                    allForcedMoves.push(...getForcedRed(board, i, j))
+                }
+            }
+        }
+    }
+
+    if (color.toLowerCase() === "blue"){
+        for (let i = 0; i < 8; i++){
+            for (let j = 0; j < 8; j++ ){  
+                if(board[i][j] === '1'){
+                    allForcedMoves.push(...getForcedBlue(board, i, j))
+                }
+            }
+        }
+    }
+    console.log(allForcedMoves)
+    return allForcedMoves
+}
+
+/**
+ * Maps array of sub arrays of ints to array of string represented sub arrays.
+ * @param {[[int]]} arr 
+ * @returns [str]
+ */
+function nestedToStr(arr){
+    return arr.map(elem => (elem.toString()))
+}
+
+
+//looop through board
+// every time we find a piece of `color` run getMoves{color} on it, only looking for forced moves.
+//add forced moves to a list and return the list of forced moves.
+// every time a user tries to selecte a piece, inside getMove(), we firt want to look for forced moves
+// return forced moves if len(searchForced) > 0. Otherwise return getMoves{color}
+
+
+
+    //make a fucntion getTakes
+//if taking sequence is possible, Show moves after another, if the user keeps taking. If user click elsewhere after a move, 
+//end the taking squence and switch turns.
+export {mutateTaking, removeHighlights, searchForced, getMovesBlue, getMovesRed, copyBoard, updateCoordinates, nestedToStr}
