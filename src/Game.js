@@ -2,7 +2,7 @@ import { useState } from "react";
 import Board from "./Board";
 
 export default function Game(){
-    const [redToMove, setRedToMove] = useState(true)
+    const [redToMove, setRedToMove] = useState(false)
   
     function makeMove(){
       setRedToMove(!redToMove)

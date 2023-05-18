@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Square from "./Square";
-
+import {removeHighlights, mutateTaking, showMovesBlue, showMovesRed, copyBoard, updateCoordinates} from "./utils";
 export default function Board({redToMove, moveMade}) {
     //model of the checkers board.
     //used to update the elements.
@@ -17,94 +17,40 @@ export default function Board({redToMove, moveMade}) {
   
     const [showingMoves, setShowingMoves] = useState(false)
     const [selectedPiece, setSelectedPiece] = useState([])
-  
-    /**
-     * Replace all highlights ('+') on _board with empty squares (' ').
-     * Mutates the given _board (dost NOT setBoard).
-     */
-    const removeHighlights = (_board) => {
-      for (let i = 0; i < 8; i++){
-        for (let j = 0; j < 8; j++){
-          if(_board[i][j] === '+'){
-            _board[i][j] = ' '
-          }
-        }
-      }
-      console.log(_board)
-    }
-  
-    /**
-     * Changes the charater at every coordinate in coordinates to 'char'.
-     * Updates the original board (does setBoard).
-     */
-    const updateCoordinates = (coordionates, char) => {
-      //copy the board
-      let newBoard = board.map((row) => {
-        return row.slice()
-      });
-      //update the copied board
-      for (let coordinate of coordionates){
-        newBoard[coordinate[0]][coordinate[1]] = char
-      }
-      //update the board
-      setBoard(newBoard)
-    }
 
     /**
      * Sets the selectedPiece if a piece was clicked, resets selectedPiece if empty square was clicked.
      * Sets SelectedPiece to true if a piece was clicked, false otherwise.
      * Returns an array of all valid move coordinates for the selected piece.
-     * THIS WILL GET MORE COMPLEX AS WE IMPLEMENT THE ABILITY TO TAKE ENEMY PIECES.
      */
     const showMoves = (row, col) => {
       
       let selected = board[row][col]
-  
+
       if (selected === '0' && redToMove){
-        //calculate moves for red
-        let possibleMoves = []
-  
-        if ((row + 1 <= 7) && (col - 1 >= 0)){
-          possibleMoves.push([row + 1, col - 1])
-        }
-        
-        if ((row + 1 <= 7) && (col + 1 <= 7)){
-          possibleMoves.push([row + 1, col + 1])
-        }
-  
+        //calculate possible moves for red
+        let possibleMoves = showMovesRed(board, row, col)
+        // Record the selectedPiece and return possible moves
         setShowingMoves(true)
         setSelectedPiece([row, col])
         return possibleMoves
       }
+      
       else if (selected === '1' && !redToMove){
-        //calculate moves for blue
-        console.log('blue')
-        let possibleMoves = []
-  
-        if ((row - 1 >= 0) && (col - 1 >= 0)){
-          possibleMoves.push([row - 1, col - 1])
-        }
-        
-        if ((row - 1 >= 0) && (col + 1 <= 7)){
-          possibleMoves.push([row - 1, col + 1])
-        }
-  
+        //calculate possible moves for blue
+        let possibleMoves = showMovesBlue(board, row, col)
+        // Record the selectedPiece and return possible moves
         setSelectedPiece([row, col])
         setShowingMoves(true)
         return possibleMoves
       }
+      //empty square was clicked
       else{
-        //hide moves if clicked an empty square
+        //hide moves
         setShowingMoves(false)
         setSelectedPiece([])
         //remove all highlights
-        const newBoard = removeHighlights(
-            board.map((row) => {
-              return row.map((cell) => {
-                return cell
-              })
-            })
-          )
+        const newBoard = removeHighlights(copyBoard(board))
         setBoard(newBoard)
         //no moves possible (no piece selected)
         return []
@@ -117,26 +63,26 @@ export default function Board({redToMove, moveMade}) {
      */
     const makeMove = (inital, final) => {
       
-      //invalid final square
-      if (board[final[0]][final[1]] !== "+"){
+      //invalid final square => early return
+      if (board[final[0]][final[1]] !== "+" || (final[0] === inital[0] && final[1] === inital[1])){
         setShowingMoves(false)
         setSelectedPiece([])
         //remove highlights
-        const newBoard = board.map((row) => (row.map((cell) => (cell))))
+        const newBoard = copyBoard(board)
         removeHighlights(newBoard)
         setBoard(newBoard)
         return 
       }
-      //copy the board
-      let newBoard = []
-      for (let i = 0; i < 8; i++){
-        newBoard.push(board[i].slice())
+      let newBoard = copyBoard(board)
+      //##Mutate the copied board##
+      //Check the move is taking (piece moves 2 rows if when taking)
+      if(Math.abs(final[0] - inital[0]) === 2){
+        mutateTaking(inital, final, newBoard)
       }
-      //mutate the copied board
-      if (final[0] !== inital[0] || final[1] !== inital[1] ){
-        newBoard[final[0]][final[1]] = board[inital[0]][inital[1]]
-        newBoard[inital[0]][inital[1]] = ' '
-      }
+      
+      //update the final and inital
+      newBoard[final[0]][final[1]] = board[inital[0]][inital[1]]
+      newBoard[inital[0]][inital[1]] = ' '
       removeHighlights(newBoard)
   
       //update the board
@@ -157,16 +103,12 @@ export default function Board({redToMove, moveMade}) {
       //Possible moves are shown, try to make a move.
       if (showingMoves) {
         makeMove(selectedPiece, [row, col])
-        console.log('making')
       } 
-      //No piece selected, try to select a piece and show the possible moves.
+      //No piece selected, try to select a piece.
       else {
         let possibleMoves = showMoves(row, col)
-        console.log('Showing')
-        console.log(possibleMoves)
         //highlight every possible move (+ means highlighted square)
-        updateCoordinates(possibleMoves, '+')
-  
+        setBoard(updateCoordinates(copyBoard(board), possibleMoves, '+'))
       }
     }
   

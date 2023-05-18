@@ -12,9 +12,12 @@ The Board calculates moves based on 'position' state). Recalculate highlights on
 
 
 ### do next
-- Implement 'taking' functionality. 
+- Implement 'taking' functionality for blue. 
 - Force the user to take if a take is possible (according to the rules).
+- Need to scan the board searching for forced takes after every move!
+- refactor the code.
 
 
 ### interesting
 - React fails to change the same state (array) twice in a row. When I setBoard and then setBoard right after, the first setBoard does not save, and only the second (last) setBoard applies. Why?
+- King does not jump across the board (interesting).
