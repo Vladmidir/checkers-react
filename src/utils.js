@@ -56,7 +56,7 @@ function copyBoard(board) {
 /**
  * Substitue every coordinate in `coordinates` on the `board` for `char`
  * @param {[[int]]} board 
- * @param {[[int]]} coordinates
+ * @param {[[int]]} coordionates
  * @param {str} char
  */
 const updateCoordinates = (board, coordionates, char) => {
@@ -173,6 +173,7 @@ function getMovesBlue(board, row, col) {
 
 /**
  * Look for forced moves for player `color` on the board.
+ * Returns a list of coordinates of the form `[initial_row, initial_col, final_row, final_col]`
  * Red is 0, Blue is 1.
  * @param {[[int]]} board 
  * @param {str} color
@@ -184,7 +185,7 @@ function searchForced(board, color) {
         for (let i = 0; i < 8; i++){
             for (let j = 0; j < 8; j++ ){  
                 if (board[i][j] === '0'){
-                    allForcedMoves.push(...getForcedRed(board, i, j))
+                    allForcedMoves.push(...getForcedRed(board, i, j).map((move) => ([i, j, ...move])))
                 }
             }
         }
@@ -194,7 +195,7 @@ function searchForced(board, color) {
         for (let i = 0; i < 8; i++){
             for (let j = 0; j < 8; j++ ){  
                 if(board[i][j] === '1'){
-                    allForcedMoves.push(...getForcedBlue(board, i, j))
+                    allForcedMoves.push(...getForcedBlue(board, i, j).map((move) => ([i, j, ...move])))
                 }
             }
         }
@@ -213,15 +214,7 @@ function nestedToStr(arr){
 }
 
 
-//looop through board
-// every time we find a piece of `color` run getMoves{color} on it, only looking for forced moves.
-//add forced moves to a list and return the list of forced moves.
-// every time a user tries to selecte a piece, inside getMove(), we firt want to look for forced moves
-// return forced moves if len(searchForced) > 0. Otherwise return getMoves{color}
-
-
-
-    //make a fucntion getTakes
+//make a fucntion getTakes
 //if taking sequence is possible, Show moves after another, if the user keeps taking. If user click elsewhere after a move, 
 //end the taking squence and switch turns.
-export {mutateTaking, removeHighlights, searchForced, getMovesBlue, getMovesRed, copyBoard, updateCoordinates, nestedToStr}
+export {mutateTaking, removeHighlights, searchForced, getMovesBlue, getMovesRed, copyBoard, updateCoordinates, nestedToStr, getForcedRed, getForcedBlue}

@@ -12,10 +12,8 @@ The Board calculates moves based on 'position' state). Recalculate highlights on
 
 
 ### do next
-- Implement 'taking' functionality for blue. 
-- Force the user to take if a take is possible (according to the rules).
-- Need to scan the board searching for forced takes after every move!
-- refactor the code.
+- Implement Kings.
+- Announce the winner.
 
 
 ### interesting
