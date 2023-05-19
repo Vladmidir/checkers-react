@@ -13,6 +13,7 @@ The Board calculates moves based on 'position' state). Recalculate highlights on
 
 ### do next
 - Implement Kings.
+- Kings are breaking the game! Make queens function causes a tonn of issues.
 - Announce the winner.
 
 

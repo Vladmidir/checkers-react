@@ -67,7 +67,6 @@ const updateCoordinates = (board, coordionates, char) => {
     return board
   }
 
-
 /**
  * Return all forced moves for the Red piece at (`row`, `col`)
  * @param {[[int]]} board 
@@ -78,11 +77,11 @@ const updateCoordinates = (board, coordionates, char) => {
 function getForcedRed(board, row, col) {
     let possibleMoves = []
     //check the left boundary
-    if (row + 2 <= 7 && col - 2 >=0 && board[row + 1][col - 1] === '1' &&  board[row + 2][col - 2] === ' '){
+    if (row + 2 <= 7 && col - 2 >=0 && board[row + 1][col - 1][0] === '1' &&  board[row + 2][col - 2] === ' '){
       possibleMoves.push([row + 2, col - 2])
     }
     //check the right boundary
-    if (row + 2 <= 7 && col + 2 <= 7 && board[row + 1][col + 1] === '1' &&  board[row + 2][col + 2] === ' '){
+    if (row + 2 <= 7 && col + 2 <= 7 && board[row + 1][col + 1][0] === '1' &&  board[row + 2][col + 2] === ' '){
       possibleMoves.push([row + 2, col + 2])
     }
     return possibleMoves
@@ -102,18 +101,12 @@ function getMovesRed(board, row, col) {
         return possibleMoves
     }
     //check the left boundary
-    if ((row + 1 <= 7) && (col - 1 >= 0)){
-      //possible empty square move
-      if(board[row + 1][col - 1] === ' '){
+    if ((row + 1 <= 7 && col - 1 >= 0) && (board[row + 1][col - 1] === ' ')){
         possibleMoves.push([row + 1, col - 1])
-      }
     }
     //check the right boundary
-    if ((row + 1 <= 7) && (col + 1 <= 7)){
-      //possible empty square move
-      if(board[row + 1][col + 1] === ' '){
+    if ((row + 1 <= 7 && col + 1 <= 7) && (board[row + 1][col + 1] === ' ')){
         possibleMoves.push([row + 1, col + 1])
-      }
     }
     return possibleMoves
 }
@@ -128,11 +121,11 @@ function getMovesRed(board, row, col) {
 function getForcedBlue(board, row, col) {
     let possibleMoves = []
     //check left
-    if (row - 2 >= 0 && col - 2 >=0 && board[row - 1][col - 1] === '0' &&  board[row - 2][col - 2] === ' '){
+    if (row - 2 >= 0 && col - 2 >=0 && board[row - 1][col - 1][0] === '0' &&  board[row - 2][col - 2] === ' '){
       possibleMoves.push([row - 2, col - 2])
     }
     //check right
-    if (row - 2 >= 0 && col + 2 <= 7 && board[row - 1][col + 1] === '0' && board[row - 2][col + 2] === ' '){
+    if (row - 2 >= 0 && col + 2 <= 7 && board[row - 1][col + 1][0] === '0' && board[row - 2][col + 2] === ' '){
         possibleMoves.push([row - 2, col + 2])
     }
     return possibleMoves
@@ -170,6 +163,98 @@ function getMovesBlue(board, row, col) {
     return possibleMoves
 }
 
+function getForcedRedQueen(board, row, col) {
+  let possibleMoves = []
+  //check the left bottom boundary
+  if (row + 2 <= 7 && col - 2 >=0 && board[row + 1][col - 1][0] === '1' &&  board[row + 2][col - 2] === ' '){
+    possibleMoves.push([row + 2, col - 2])
+  }
+  //check the right bottom boundary
+  if (row + 2 <= 7 && col + 2 <= 7 && board[row + 1][col + 1][0] === '1' &&  board[row + 2][col + 2] === ' '){
+    possibleMoves.push([row + 2, col + 2])
+  }
+  //check the left top boundary
+  if (row - 2 <= 7 && col - 2 >=0 && board[row - 1][col - 1][0] === '1' &&  board[row - 2][col - 2] === ' '){
+    possibleMoves.push([row - 2, col - 2])
+  }
+  //check the right top boundary
+  if (row - 2 <= 7 && col + 2 <= 7 && board[row - 1][col + 1][0] === '1' &&  board[row - 2][col + 2] === ' '){
+    possibleMoves.push([row - 2, col + 2])
+  }
+  return possibleMoves
+}
+
+function getMovesRedQueen(board, row, col) {
+      //if we find forced moves, return early
+      let possibleMoves = getForcedRedQueen(board, row, col)
+      if (possibleMoves.length > 0){
+          return possibleMoves
+      }
+      //check the left bottom boundary
+      if ((row + 1 <= 7 && col - 1 >= 0) && (board[row + 1][col - 1] === ' ')){
+        possibleMoves.push([row + 1, col - 1])
+      }
+      //check the right bottom boundary
+      if ((row + 1 <= 7 && col + 1 <= 7) && (board[row + 1][col + 1] === ' ')){
+          possibleMoves.push([row + 1, col + 1])
+      }
+      //check the left bottom boundary
+      if ((row - 1 <= 7 && col - 1 >= 0) && (board[row - 1][col - 1] === ' ')){
+          possibleMoves.push([row - 1, col - 1])
+      }
+      //check the right bottom boundary
+      if ((row - 1 <= 7 && col + 1 <= 7) && (board[row - 1][col + 1] === ' ')){
+          possibleMoves.push([row - 1, col + 1])
+      }
+      return possibleMoves
+}
+
+function getForcedBlueQueen(board, row, col) {
+  let possibleMoves = []
+  //check top left
+  if (row - 2 >= 0 && col - 2 >=0 && board[row - 1][col - 1][0] === '0' &&  board[row - 2][col - 2] === ' '){
+    possibleMoves.push([row - 2, col - 2])
+  }
+  //check top right
+  if (row - 2 >= 0 && col + 2 <= 7 && board[row - 1][col + 1][0] === '0' && board[row - 2][col + 2] === ' '){
+      possibleMoves.push([row - 2, col + 2])
+  }
+  //check bottom left
+  if (row + 2 <= 7 && col - 2 >=0 && board[row + 1][col - 1][0] === '0' &&  board[row + 2][col - 2] === ' '){
+    possibleMoves.push([row + 2, col - 2])
+  }
+  //check bottom right
+  if (row + 2 <= 7 && col + 2 <= 7 && board[row + 1][col + 1][0] === '0' && board[row + 2][col + 2] === ' '){
+      possibleMoves.push([row + 2, col + 2])
+  }
+  return possibleMoves
+}
+
+function getMovesBlueQueen(board, row, col) {
+  let possibleMoves = getForcedBlueQueen(board, row, col)
+
+  //if forced moves exist, return early
+  if(possibleMoves.length > 0) {
+      return possibleMoves
+  }
+  //check top left boundary
+  if ((row - 1 >= 0 && col - 1 >= 0) && (board[row - 1][col - 1] === ' ')){
+      possibleMoves.push([row - 1, col - 1])
+  }
+  //check top right boundary
+  if ((row - 1 >= 0 && col + 1 <= 7) && (board[row - 1][col + 1] === ' ')){
+      possibleMoves.push([row - 1, col + 1])
+  } 
+  //check bottom left boundary
+  if ((row + 1 <= 7 && col - 1 >= 0) && (board[row + 1][col - 1] === ' ')){
+    possibleMoves.push([row + 1, col - 1])
+  }
+  //check bottom right boundary
+  if ((row + 1 <= 7 && col + 1 <= 7) && (board[row + 1][col + 1] === ' ')){
+      possibleMoves.push([row + 1, col + 1])
+  } 
+  return possibleMoves
+}
 
 /**
  * Look for forced moves for player `color` on the board.
@@ -200,7 +285,6 @@ function searchForced(board, color) {
             }
         }
     }
-    console.log(allForcedMoves)
     return allForcedMoves
 }
 
@@ -209,12 +293,29 @@ function searchForced(board, color) {
  * @param {[[int]]} arr 
  * @returns [str]
  */
-function nestedToStr(arr){
+function nestedToStr(arr) {
     return arr.map(elem => (elem.toString()))
 }
 
+/**
+ * Make queens if any.
+ * @param {[[int]]} board 
+ * @returns [[int]]
+ */
+function makeQueens(board) {
+  for (let i = 0; i < 8; i++){
+      if(board[0][i] === '1'){
+        board[0][i] = '11'
+      }
+  }
+  for (let i = 0; i < 8; i++){
+    if(board[7][i] === '0'){
+      board[7][i] = '00'
+    }
+  }
+}
 
-//make a fucntion getTakes
-//if taking sequence is possible, Show moves after another, if the user keeps taking. If user click elsewhere after a move, 
-//end the taking squence and switch turns.
-export {mutateTaking, removeHighlights, searchForced, getMovesBlue, getMovesRed, copyBoard, updateCoordinates, nestedToStr, getForcedRed, getForcedBlue}
+
+
+export {mutateTaking, removeHighlights, searchForced, getMovesBlue, getMovesRed, getForcedRedQueen, getMovesRedQueen,
+  getForcedBlueQueen, getMovesBlueQueen, copyBoard, updateCoordinates, nestedToStr, getForcedRed, getForcedBlue, makeQueens}

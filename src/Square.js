@@ -6,6 +6,7 @@ export default function Square({id, piece, handleClick}) {
     if((id[0] % 2 !== 0 && id[1] % 2 !== 0) || (id[0] % 2 === 0 && id[1] % 2 ===0)){
       isWhite = true
     }
+
     //pass 'piece' to the Piece element
     return (
       <button 

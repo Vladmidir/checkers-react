@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Square from "./Square";
-import {removeHighlights, mutateTaking, getMovesBlue, getMovesRed, copyBoard, 
-  getForcedBlue, getForcedRed, updateCoordinates, searchForced, nestedToStr} from "./utils";
+import {removeHighlights, mutateTaking, getMovesBlue, getMovesRed, getMovesRedQueen, getMovesBlueQueen, copyBoard, 
+  getForcedBlue, getForcedRed, getForcedRedQueen, getForcedBlueQueen, updateCoordinates, searchForced, nestedToStr, makeQueens } from "./utils";
 export default function Board({redToMove, moveMade}) {
     //model of the checkers board.
     //used to update the elements.
@@ -30,7 +30,7 @@ export default function Board({redToMove, moveMade}) {
       let selected = board[row][col]
 
       if (selected === '0' && redToMove){
-        //calculate possible moves for red piece selected
+        //calculate possible moves for the red piece selected
         let possibleMoves = getMovesRed(board, row, col)
         //calculate all forced moves for red
         const forcedMoves = nestedToStr(searchForced(board, "red"))
@@ -46,7 +46,7 @@ export default function Board({redToMove, moveMade}) {
       }
       
       else if (selected === '1' && !redToMove){
-        //calculate possible moves for blue piece selected
+        //calculate possible moves for the blue piece selected
         let possibleMoves = getMovesBlue(board, row, col)
         //calculate all forced moves for blue
         const forcedMoves = nestedToStr(searchForced(board, "blue")) //maybe represented it in str format in utils.js to shorten code.
@@ -61,6 +61,41 @@ export default function Board({redToMove, moveMade}) {
         setShowingMoves(true)
         return possibleMoves
       }
+      //red queen selected
+      else if(selected === '00' && redToMove){
+        //calculate possible moves for the red Queen selected
+        let possibleMoves = getMovesRedQueen(board, row, col)
+        //calculate all forced moves for red
+        const forcedMoves = nestedToStr(searchForced(board, "red"))
+        //If there are forced moves on the board AND the selected piece has possible moves, then
+        //make sure the possible moves are among the forced.
+        if (forcedMoves.length > 0 && possibleMoves.length > 0){
+            possibleMoves = possibleMoves.filter(move => forcedMoves.includes(row + ',' + col + ',' + move.toString()))
+        }
+        // Record the selectedPiece and return possible moves
+        setShowingMoves(true)
+        setSelectedPiece([row, col])
+        return possibleMoves
+      }
+
+      else if(selected === '11' && !redToMove){
+        //calculate possible moves for the blue Queen selected
+        let possibleMoves = getMovesBlueQueen(board, row, col)
+        console.log(possibleMoves)
+        //calculate all forced moves for blue
+        const forcedMoves = nestedToStr(searchForced(board, "blue")) //maybe represented it in str format in utils.js to shorten code.
+        //If there are forced moves on the board AND the selected piece has possible move, then
+        //make sure the possible moves are among the forced.
+        if (forcedMoves.length > 0 && possibleMoves.length > 0){
+            possibleMoves = possibleMoves.filter(move => forcedMoves.includes(row + ',' + col + ',' + move.toString()))
+        }
+
+        // Record the selectedPiece and return possible moves
+        setSelectedPiece([row, col])
+        setShowingMoves(true)
+        return possibleMoves
+      }
+
       //empty square was clicked
       else{
         //hide moves
@@ -138,12 +173,47 @@ export default function Board({redToMove, moveMade}) {
             return
           }
         }
+        //red Queen just took, check for red Queen series
+        if(board[initial[0]][initial[1]] === '00'){
+          continuedTakes = getForcedRedQueen(newBoard, final[0], final[1])
+          if(continuedTakes.length > 0){
+            //update the board, because we will early return
+            newBoard[final[0]][final[1]] = board[initial[0]][initial[1]]
+            newBoard[initial[0]][initial[1]] = ' '
+            removeHighlights(newBoard)
+            //show the possible continuations
+            setBoard(updateCoordinates(newBoard, continuedTakes, '+'))
+            setShowingMoves(true)
+            setSelectedPiece(final)
+            setSeries(true) //start the taking series
+            return
+          }
+        }
+        //blue Queen just took, check for blue Queen series
+        if(board[initial[0]][initial[1]] === '11'){
+          continuedTakes = getForcedBlueQueen(newBoard, final[0], final[1])
+          //continued takes exist, display them
+          if(continuedTakes.length > 0){
+            //update the board, because we will early return
+            newBoard[final[0]][final[1]] = board[initial[0]][initial[1]]
+            newBoard[initial[0]][initial[1]] = ' '
+            removeHighlights(newBoard)
+            //show the possible continuations
+            setBoard(updateCoordinates(newBoard, continuedTakes, '+'))
+            setShowingMoves(true)
+            setSelectedPiece(final)
+            //start the taking series
+            setSeries(true) 
+            return
+          }
+        }
       }
       //update the final and initial
       newBoard[final[0]][final[1]] = board[initial[0]][initial[1]]
       newBoard[initial[0]][initial[1]] = ' '
       removeHighlights(newBoard)
-  
+      //check for queens
+      makeQueens(newBoard)
       //update the board
       setBoard(newBoard)
       //Reset all selections
@@ -177,8 +247,7 @@ export default function Board({redToMove, moveMade}) {
           let possibleMoves = showMoves(row, col)
           //highlight every possible move (+ means highlighted square)
           setBoard(updateCoordinates(copyBoard(board), possibleMoves, '+'))
-        }
-        
+        } 
       }
     }
   
