@@ -1,0 +1,2 @@
+body{margin:20px}.square{border:1px solid #000;box-sizing:border-box;height:50px;margin-right:-1px;margin-top:-1px;padding:0;width:50px}.white{background-color:#fff}.black{background-color:#000}.red{color:#ac1010}.blue{color:#0202bc}.piece{font-size:60px;font-weight:700;position:relative;text-align:center;top:-13px}.highlighted,.queen{font-size:50px}.highlighted{color:rgba(240,255,255,.56);top:-7px}.board-row{display:flex;flex-direction:row}
+/*# sourceMappingURL=main.ad60cfe0.css.map*/
