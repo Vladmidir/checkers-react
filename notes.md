@@ -12,6 +12,7 @@ The Board calculates moves based on 'position' state). Recalculate highlights on
 
 
 ### do next
+- Check if the player is blocked to determine winner.
 - Finished the game! Maybe do drag-and-drop next.
 
 ### interesting
