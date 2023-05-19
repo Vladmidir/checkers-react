@@ -50,3 +50,36 @@ body {
   display: flex;
   flex-direction: row;
 }
+
+@media (max-width: 400px) {
+
+  body {
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .square {
+    height: 40px;
+    width: 40px;
+  }
+
+  .piece {
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+    position: relative;
+  }
+  
+  .queen {
+    font-size: 42px;
+  }
+  
+  .highlighted {
+    color: rgba(240, 255, 255, 0.56);
+    font-size: 42px;
+  }
+
+}
+
