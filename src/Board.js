@@ -1,24 +1,18 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import Square from "./Square";
 import {removeHighlights, mutateTaking, getMovesBlue, getMovesRed, getMovesRedQueen, getMovesBlueQueen, copyBoard, 
   getForcedBlue, getForcedRed, getForcedRedQueen, getForcedBlueQueen, updateCoordinates, searchForced, nestedToStr, makeQueens } from "./utils";
-export default function Board({redToMove, moveMade}) {
+
+const Board = function Board({redToMove, moveMade, board, setBoard}, ref) {
     //model of the checkers board.
     //used to update the elements.
-    const [board, setBoard] = useState([
-      [' ', '0', ' ', '0', ' ', '0', ' ', '0'],
-      ['0', ' ', '0', ' ', '0', ' ', '0', ' '],
-      [' ', '0', ' ', '0', ' ', '0', ' ', '0'],
-      [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-      [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-      ['1', ' ', '1', ' ', '1', ' ', '1', ' '],
-      [' ', '1', ' ', '1', ' ', '1', ' ', '1'],
-      ['1', ' ', '1', ' ', '1', ' ', '1', ' ']
-    ])
+
   
     const [showingMoves, setShowingMoves] = useState(false)
     const [selectedPiece, setSelectedPiece] = useState([])
     const [series, setSeries] = useState(false)
+
+
 
     /**
      * Sets the selectedPiece if a piece was clicked, resets selectedPiece if empty square was clicked.
@@ -81,7 +75,6 @@ export default function Board({redToMove, moveMade}) {
       else if(selected === '11' && !redToMove){
         //calculate possible moves for the blue Queen selected
         let possibleMoves = getMovesBlueQueen(board, row, col)
-        console.log(possibleMoves)
         //calculate all forced moves for blue
         const forcedMoves = nestedToStr(searchForced(board, "blue")) //maybe represented it in str format in utils.js to shorten code.
         //If there are forced moves on the board AND the selected piece has possible move, then
@@ -127,6 +120,7 @@ export default function Board({redToMove, moveMade}) {
         if(series){
           setSeries(false)
           moveMade()
+          
         }
         return 
       }
@@ -270,4 +264,6 @@ export default function Board({redToMove, moveMade}) {
       })}
       </>
     );
-  }
+  };
+
+  export default forwardRef(Board)

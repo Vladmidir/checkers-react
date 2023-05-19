@@ -272,6 +272,9 @@ function searchForced(board, color) {
                 if (board[i][j] === '0'){
                     allForcedMoves.push(...getForcedRed(board, i, j).map((move) => ([i, j, ...move])))
                 }
+                else if (board[i][j] === '00'){
+                    allForcedMoves.push(...getForcedRedQueen(board, i, j).map((move) => ([i, j, ...move])))
+                } 
             }
         }
     }
@@ -280,7 +283,9 @@ function searchForced(board, color) {
         for (let i = 0; i < 8; i++){
             for (let j = 0; j < 8; j++ ){  
                 if(board[i][j] === '1'){
-                    allForcedMoves.push(...getForcedBlue(board, i, j).map((move) => ([i, j, ...move])))
+                  allForcedMoves.push(...getForcedBlue(board, i, j).map((move) => ([i, j, ...move])))
+                }else if (board[i][j] === '11') {
+                  allForcedMoves.push(...getForcedBlueQueen(board, i, j).map((move) => ([i, j, ...move])))
                 }
             }
         }
@@ -315,7 +320,33 @@ function makeQueens(board) {
   }
 }
 
+function redWon(board) {
+  //search the board looking for pieces. 
+  for (let i = 0; i < 8; i++){
+    for (let j = 0; j < 8; j++ ){  
+      if (board[i][j][0] === '1'){
+          //found a blue piece, not yet won
+          return false
+      }
+    }
+  }
+  return true
+}
+
+function blueWon(board) {
+  //search the board looking for pieces. 
+  for (let i = 0; i < 8; i++){
+    for (let j = 0; j < 8; j++ ){  
+      if (board[i][j][0] === '0'){
+          //found a blue piece, not yet won
+          return false
+      }
+    }
+  }
+  return true
+}
 
 
 export {mutateTaking, removeHighlights, searchForced, getMovesBlue, getMovesRed, getForcedRedQueen, getMovesRedQueen,
-  getForcedBlueQueen, getMovesBlueQueen, copyBoard, updateCoordinates, nestedToStr, getForcedRed, getForcedBlue, makeQueens}
+  getForcedBlueQueen, getMovesBlueQueen, copyBoard, updateCoordinates, nestedToStr, getForcedRed, getForcedBlue, makeQueens,
+redWon, blueWon}
