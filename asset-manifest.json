@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/checkers-react/static/css/main.a8e1a463.css",
-    "main.js": "/checkers-react/static/js/main.50f1964f.js",
+    "main.js": "/checkers-react/static/js/main.ede58c6f.js",
     "static/js/787.f41fc285.chunk.js": "/checkers-react/static/js/787.f41fc285.chunk.js",
     "index.html": "/checkers-react/index.html",
     "main.a8e1a463.css.map": "/checkers-react/static/css/main.a8e1a463.css.map",
-    "main.50f1964f.js.map": "/checkers-react/static/js/main.50f1964f.js.map",
+    "main.ede58c6f.js.map": "/checkers-react/static/js/main.ede58c6f.js.map",
     "787.f41fc285.chunk.js.map": "/checkers-react/static/js/787.f41fc285.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a8e1a463.css",
-    "static/js/main.50f1964f.js"
+    "static/js/main.ede58c6f.js"
   ]
 }
